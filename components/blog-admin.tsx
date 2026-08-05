@@ -138,8 +138,19 @@ export function BlogAdmin() {
 
   async function api(url: string, init?: RequestInit) {
     const response = await fetch(url, { ...init, cache: "no-store" });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(payload.error || `Request failed (${response.status})`);
+    const body = await response.text();
+    let payload: any = {};
+    try {
+      payload = JSON.parse(body);
+    } catch {
+      // Gateways sometimes return an HTML error page instead of JSON.
+    }
+    if (!response.ok) {
+      const fallback = response.status === 504
+        ? "The publishing server timed out. Please try again."
+        : `Request failed (${response.status})`;
+      throw new Error(payload.error || fallback);
+    }
     return payload;
   }
 

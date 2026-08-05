@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Post } from "@/lib/content";
+import { allPosts, type Post } from "@/lib/content";
 import { isAdmin, sameOrigin } from "@/lib/admin-auth";
 import { readPostsFile, writePostsFile } from "@/lib/github-content";
 import { cleanList, sanitizePostHtml, slugify } from "@/lib/post-sanitize";
@@ -25,12 +25,9 @@ function postPath(date: string, slug: string) {
 
 export async function GET(request: NextRequest) {
   if (!await isAdmin(request)) return unauthorized();
-  try {
-    const { posts } = await readPostsFile();
-    return NextResponse.json({ posts: posts.sort((a, b) => new Date(b.modified || b.date).getTime() - new Date(a.modified || a.date).getTime()) });
-  } catch (error) {
-    return NextResponse.json({ error: message(error) }, { status: 502 });
-  }
+  return NextResponse.json({
+    posts: [...allPosts].sort((a, b) => new Date(b.modified || b.date).getTime() - new Date(a.modified || a.date).getTime()),
+  });
 }
 
 export async function POST(request: NextRequest) {

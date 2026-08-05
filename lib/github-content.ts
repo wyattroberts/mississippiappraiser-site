@@ -29,19 +29,41 @@ function base64ToUtf8(value: string) {
   return new TextDecoder().decode(Uint8Array.from(binary, (character) => character.charCodeAt(0)));
 }
 
-async function github(path: string, init?: RequestInit) {
+const READ_TIMEOUT_MS = 8_000;
+const WRITE_TIMEOUT_MS = 20_000;
+
+function githubFailure(error: unknown) {
+  if (error instanceof DOMException && error.name === "TimeoutError") {
+    return new Error("GitHub did not respond in time. Please try again.");
+  }
+  return error instanceof Error ? error : new Error("Unable to contact GitHub. Please try again.");
+}
+
+async function github(path: string, init: RequestInit = {}, attempt = 0): Promise<Response> {
   const { token, repository } = settings();
-  const response = await fetch(`https://api.github.com/repos/${repository}/${path}`, {
-    ...init,
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: `Bearer ${token}`,
-      "X-GitHub-Api-Version": "2022-11-28",
-      "Content-Type": "application/json",
-      ...init?.headers,
-    },
-    cache: "no-store",
-  });
+  const method = String(init.method || "GET").toUpperCase();
+  const mayRetry = method === "GET" && attempt === 0;
+  let response: Response;
+  try {
+    response = await fetch(`https://api.github.com/repos/${repository}/${path}`, {
+      ...init,
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json",
+        ...init.headers,
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(method === "GET" ? READ_TIMEOUT_MS : WRITE_TIMEOUT_MS),
+    });
+  } catch (error) {
+    if (mayRetry) return github(path, init, attempt + 1);
+    throw githubFailure(error);
+  }
+  if (mayRetry && [502, 503, 504].includes(response.status)) {
+    return github(path, init, attempt + 1);
+  }
   if (!response.ok) {
     const error = await response.json().catch(() => ({})) as { message?: string };
     throw new Error(error.message || `GitHub returned ${response.status}`);
