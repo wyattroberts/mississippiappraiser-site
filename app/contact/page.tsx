@@ -15,8 +15,8 @@ export default function ContactPage() {
           <h1>Tell us about the property.</h1>
           <p className="prose-large">For a fee quote, send the property address, property type, intended use, and desired timing.</p>
           <div className="contact-cards compact-contact-cards">
-            <a href="tel:+16019514280"><span>Call</span><strong>(601) 951-4280</strong></a>
-            <a href="mailto:wyatt@wyattopia.com?subject=Commercial%20appraisal%20request"><span>Email</span><strong>wyatt@wyattopia.com</strong></a>
+            <a href="tel:+16017063391"><span>Call</span><strong>(601) 706-3391</strong></a>
+            <a href="#contact-form"><span>Online</span><strong>Send a secure message</strong></a>
           </div>
           <ContactForm />
         </div>

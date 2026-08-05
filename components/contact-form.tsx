@@ -68,12 +68,12 @@ export function ContactForm() {
       setForm(initialForm);
     } catch {
       setState("error");
-      setStatus("Something went wrong. Please try again or call (601) 951-4280.");
+      setStatus("Something went wrong. Please try again or call (601) 706-3391.");
     }
   }
 
   return (
-    <form className="contact-form" onSubmit={submit} noValidate>
+    <form id="contact-form" className="contact-form" onSubmit={submit} noValidate>
       <p className="required-note"><span aria-hidden="true">*</span> Name, phone number, email address, and message are required. SMS consent is optional.</p>
       <div className="contact-form-grid">
         <label className="form-field">

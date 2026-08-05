@@ -8,8 +8,8 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="footer-label">Reach us</p>
-          <a href="tel:+16019514280">(601) 951-4280</a>
-          <a href="mailto:wyatt@wyattopia.com">wyatt@wyattopia.com</a>
+          <a href="tel:+16017063391">(601) 706-3391</a>
+          <a href="/contact/">Send a secure message</a>
         </div>
         <div>
           <p className="footer-label">Mailing address</p>

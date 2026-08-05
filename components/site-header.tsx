@@ -12,7 +12,7 @@ export function SiteHeader() {
           <a href="/service-area/">Service area</a>
           <a href="/blog/">Appraiser blog</a>
           <a href="/contact/">Contact</a>
-          <a className="nav-call" href="tel:+16019514280">Call (601) 951-4280</a>
+          <a className="nav-call" href="tel:+16017063391">Call (601) 706-3391</a>
         </nav>
       </div>
     </header>

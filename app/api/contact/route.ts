@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const upstream = await fetch(CONTACT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, phone, sms_consent: smsConsent, subject, message }),
+      body: JSON.stringify({ name, email, phone, sms_consent: smsConsent, subject: `[Mississippi Appraiser] ${subject || "Website inquiry"}`, message }),
       cache: "no-store",
     });
     if (!upstream.ok) {

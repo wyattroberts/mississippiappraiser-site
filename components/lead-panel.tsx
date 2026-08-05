@@ -10,7 +10,7 @@ export function LeadPanel({ location }: { location?: string }) {
         </p>
       </div>
       <div className="lead-actions">
-        <a className="button button-light" href="tel:+16019514280">Call (601) 951-4280</a>
+        <a className="button button-light" href="tel:+16017063391">Call (601) 706-3391</a>
         <a className="button button-outline-light" href="/contact/">Open contact form</a>
       </div>
     </section>
