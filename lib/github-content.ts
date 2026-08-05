@@ -1,4 +1,5 @@
 import type { Post } from "@/lib/content";
+import { request as httpsRequest } from "node:https";
 
 type GitHubFile = { content: string; encoding: string; sha: string };
 
@@ -32,56 +33,77 @@ function base64ToUtf8(value: string) {
 const READ_TIMEOUT_MS = 8_000;
 const WRITE_TIMEOUT_MS = 20_000;
 
-function githubFailure(error: unknown) {
-  if (error instanceof DOMException && error.name === "TimeoutError") {
-    return new Error("GitHub did not respond in time. Please try again.");
-  }
-  return error instanceof Error ? error : new Error("Unable to contact GitHub. Please try again.");
-}
+type GitHubRequest = { method?: "GET" | "PUT"; body?: string };
 
-async function github(path: string, init: RequestInit = {}, attempt = 0): Promise<Response> {
+function github<T>(path: string, init: GitHubRequest = {}, attempt = 0): Promise<T> {
   const { token, repository } = settings();
-  const method = String(init.method || "GET").toUpperCase();
+  const method = init.method || "GET";
   const mayRetry = method === "GET" && attempt === 0;
-  let response: Response;
-  try {
-    response = await fetch(`https://api.github.com/repos/${repository}/${path}`, {
-      ...init,
+  const timeout = method === "GET" ? READ_TIMEOUT_MS : WRITE_TIMEOUT_MS;
+
+  return new Promise<T>((resolve, reject) => {
+    const request = httpsRequest({
+      protocol: "https:",
+      hostname: "api.github.com",
+      port: 443,
+      path: `/repos/${repository}/${path}`,
+      method,
+      family: 4,
       headers: {
         Accept: "application/vnd.github+json",
         Authorization: `Bearer ${token}`,
         "X-GitHub-Api-Version": "2022-11-28",
         "Content-Type": "application/json",
-        ...init.headers,
+        "User-Agent": "mississippiappraiser-blog-publisher",
+        ...(init.body ? { "Content-Length": Buffer.byteLength(init.body) } : {}),
       },
-      cache: "no-store",
-      signal: AbortSignal.timeout(method === "GET" ? READ_TIMEOUT_MS : WRITE_TIMEOUT_MS),
+    }, (response) => {
+      const chunks: Buffer[] = [];
+      response.on("data", (chunk: Buffer) => chunks.push(chunk));
+      response.on("end", () => {
+        const status = response.statusCode || 500;
+        const text = Buffer.concat(chunks).toString("utf8");
+        let payload: T & { message?: string };
+        try {
+          payload = JSON.parse(text) as T & { message?: string };
+        } catch {
+          payload = {} as T & { message?: string };
+        }
+        if (status >= 200 && status < 300) {
+          resolve(payload);
+          return;
+        }
+        if (mayRetry && [502, 503, 504].includes(status)) {
+          void github<T>(path, init, attempt + 1).then(resolve, reject);
+          return;
+        }
+        reject(new Error(payload.message || `GitHub returned ${status}`));
+      });
     });
-  } catch (error) {
-    if (mayRetry) return github(path, init, attempt + 1);
-    throw githubFailure(error);
-  }
-  if (mayRetry && [502, 503, 504].includes(response.status)) {
-    return github(path, init, attempt + 1);
-  }
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({})) as { message?: string };
-    throw new Error(error.message || `GitHub returned ${response.status}`);
-  }
-  return response;
+
+    request.setTimeout(timeout, () => request.destroy(new Error("GitHub did not respond in time. Please try again.")));
+    request.on("error", (error) => {
+      if (mayRetry) {
+        void github<T>(path, init, attempt + 1).then(resolve, reject);
+        return;
+      }
+      reject(error);
+    });
+    if (init.body) request.write(init.body);
+    request.end();
+  });
 }
 
 export async function readPostsFile() {
   const { branch } = settings();
-  const response = await github(`contents/data/posts.json?ref=${encodeURIComponent(branch)}`);
-  const file = await response.json() as GitHubFile;
+  const file = await github<GitHubFile>(`contents/data/posts.json?ref=${encodeURIComponent(branch)}`);
   if (file.encoding !== "base64") throw new Error("Unexpected GitHub content encoding");
   return { posts: JSON.parse(base64ToUtf8(file.content)) as Post[], sha: file.sha };
 }
 
 export async function writePostsFile(posts: Post[], sha: string, message: string) {
   const { branch } = settings();
-  const response = await github("contents/data/posts.json", {
+  return github<{ commit: { html_url: string; sha: string } }>("contents/data/posts.json", {
     method: "PUT",
     body: JSON.stringify({
       message,
@@ -90,14 +112,12 @@ export async function writePostsFile(posts: Post[], sha: string, message: string
       branch,
     }),
   });
-  return response.json() as Promise<{ commit: { html_url: string; sha: string } }>;
 }
 
 export async function uploadBlogImage(path: string, bytes: Uint8Array, message: string) {
   const { branch } = settings();
-  const response = await github(`contents/${path}`, {
+  return github<{ commit: { html_url: string; sha: string } }>(`contents/${path}`, {
     method: "PUT",
     body: JSON.stringify({ message, content: bytesToBase64(bytes), branch }),
   });
-  return response.json() as Promise<{ commit: { html_url: string; sha: string } }>;
 }
