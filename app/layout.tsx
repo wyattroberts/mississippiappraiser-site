@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     template: "%s — Mississippi Appraiser",
   },
   description: "Commercial property appraisal, land valuation, and real estate consulting throughout Mississippi.",
+  alternates: {
+    types: { "application/rss+xml": "https://mississippiappraiser.com/feed.xml" },
+  },
   other: {
     "codex-preview": "development",
   },

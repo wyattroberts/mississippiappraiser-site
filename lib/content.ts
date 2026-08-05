@@ -10,7 +10,12 @@ export type Post = {
   excerpt: string;
   content: string;
   categories: string[];
+  tags?: string[];
   featuredImage: string | null;
+  featuredImageAlt?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  status?: "draft" | "published" | "archived";
   originalUrl: string;
 };
 
@@ -30,10 +35,16 @@ function cleanLegacyHtml(html: string) {
     .replace(/image-(?:1024x912|980x873|480x428)\.png/g, "image.png");
 }
 
-export const posts = (postsJson as Post[]).map((post) => ({
-  ...post,
-  content: cleanLegacyHtml(post.content),
-}));
+export const allPosts = (postsJson as Post[])
+  .map((post) => ({
+    ...post,
+    status: post.status ?? "published",
+    tags: post.tags ?? [],
+    content: cleanLegacyHtml(post.content),
+  }))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export const posts = allPosts.filter((post) => post.status === "published");
 
 const archivedPages = pagesJson as ArchivedPage[];
 const mississippiPage = archivedPages.find((page) => page.slug === "mississippi");
@@ -76,6 +87,10 @@ export function plainText(html: string) {
     .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function postDescription(post: Post) {
+  return (post.seoDescription || plainText(post.excerpt) || plainText(post.content)).slice(0, 160);
 }
 
 export function findPost(year: string, month: string, slug: string) {

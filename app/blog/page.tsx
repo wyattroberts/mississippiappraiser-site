@@ -19,7 +19,7 @@ export default function BlogPage() {
           {posts.map((post) => (
             <article className="blog-row" key={post.id}>
               <a className="blog-thumb" href={postHref(post)}>
-                {post.featuredImage ? <img src={post.featuredImage} alt="" /> : <span>MA</span>}
+                {post.featuredImage ? <img src={post.featuredImage} alt={post.featuredImageAlt || ""} /> : <span>MA</span>}
               </a>
               <div>
                 <p className="post-date">{formatPostDate(post.date)} · {post.categories.join(", ")}</p>
@@ -34,4 +34,3 @@ export default function BlogPage() {
     </main>
   );
 }
-
