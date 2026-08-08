@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { LeadPanel } from "@/components/lead-panel";
 import { formatPostDate, postDescription, postHref } from "@/lib/content";
 import { findPublishedPost } from "@/lib/blog-db";
+import { BLOG_ADMIN_COOKIE_NAME, verifyAdminSession } from "@/lib/admin-auth";
 
 type Params = Promise<{ year: string; month: string; slug: string }>;
 
@@ -35,6 +37,8 @@ export default async function PostPage({ params }: { params: Params }) {
   const { year, month, slug } = await params;
   const post = await findPublishedPost(year, month, slug);
   if (!post) notFound();
+  const cookieStore = await cookies();
+  const canEdit = await verifyAdminSession(cookieStore.get(BLOG_ADMIN_COOKIE_NAME)?.value);
   const schemaImage = post.featuredImage
     ? (post.featuredImage.startsWith("https://") ? post.featuredImage : `https://mississippiappraiser.com${post.featuredImage}`)
     : undefined;
@@ -56,7 +60,10 @@ export default async function PostPage({ params }: { params: Params }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema).replace(/</g, "\\u003c") }} />
         <header className="article-header shell-narrow">
           <a className="back-link" href="/blog/">← Appraiser blog</a>
-          <p className="post-date">{formatPostDate(post.date)} · Wyatt Roberts</p>
+          <p className="post-date">
+            {formatPostDate(post.date)} · Wyatt Roberts
+            {canEdit && <> · <a className="article-edit-link" href={`/admin/blog/?post=${post.id}`}>Edit post</a></>}
+          </p>
           <h1>{post.title}</h1>
         </header>
         {post.featuredImage && (
