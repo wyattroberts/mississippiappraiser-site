@@ -248,7 +248,8 @@ export function BlogAdmin() {
       } else {
         update("content", `${draft.content}<figure><img src="${payload.path}" alt=""><figcaption></figcaption></figure><p></p>`);
       }
-      setNotice({ kind: "info", text: "Image saved. DigitalOcean is updating the site in the background.", link: payload.commitUrl });
+      const dimensions = payload.width && payload.height ? ` (${payload.width} × ${payload.height})` : "";
+      setNotice({ kind: "success", text: `Image uploaded and optimized${dimensions}.` });
     } catch (error) {
       if (purpose === "featured") setDraft((current) => ({ ...current, featuredImage: "" }));
       setNotice({ kind: "error", text: error instanceof Error ? error.message : "Unable to upload image." });
@@ -279,9 +280,8 @@ export function BlogAdmin() {
       setSelectedId(payload.post.id);
       setDirty(false);
       setNotice({
-        kind: "success",
-        text: status === "published" ? "Published. The live site is rebuilding now." : "Draft saved privately. The publishing system is rebuilding now.",
-        link: payload.commitUrl,
+        kind: payload.backupWarning ? "info" : "success",
+        text: payload.backupWarning || (status === "published" ? "Published. The article is live now." : "Draft saved privately."),
       });
     } catch (error) {
       setNotice({ kind: "error", text: error instanceof Error ? error.message : "Unable to save the post." });
@@ -298,7 +298,7 @@ export function BlogAdmin() {
       setPosts(payload.posts);
       setDraft(toDraft(payload.post));
       setDirty(false);
-      setNotice({ kind: "success", text: "Post archived. The live site is rebuilding now.", link: payload.commitUrl });
+      setNotice({ kind: payload.backupWarning ? "info" : "success", text: payload.backupWarning || "Post archived. It has been removed from the public blog." });
     } catch (error) {
       setNotice({ kind: "error", text: error instanceof Error ? error.message : "Unable to archive the post." });
     } finally {
@@ -321,8 +321,8 @@ export function BlogAdmin() {
         <div className="publisher-login-card">
           <p className="eyebrow">Mississippi Appraiser</p>
           <h1>Publisher setup required</h1>
-          <p>The editor is installed. Add the four protected publishing settings in DigitalOcean to activate it.</p>
-          <code>BLOG_ADMIN_PASSWORD · BLOG_SESSION_SECRET · BLOG_GITHUB_TOKEN · BLOG_GITHUB_REPOSITORY</code>
+          <p>The editor is installed. Add its protected database and publishing settings in DigitalOcean to activate it.</p>
+          <code>BLOG_ADMIN_PASSWORD · BLOG_SESSION_SECRET · DATABASE_URL</code>
         </div>
       </main>
     );
@@ -438,7 +438,7 @@ export function BlogAdmin() {
               <div className="publisher-image-field full">
                 <div>
                   <span>Featured image</span>
-                  <p>Use a landscape image. JPG, PNG, WebP, or GIF; maximum 5 MB.</p>
+                  <p>JPG, PNG, WebP, or GIF; maximum 15 MB. Still images are resized and compressed automatically.</p>
                   <button type="button" onClick={() => featuredInputRef.current?.click()}>Choose image</button>
                   <input ref={featuredInputRef} hidden type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, "featured"); event.target.value = ""; }} />
                 </div>

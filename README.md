@@ -4,6 +4,10 @@ Replacement public site for `mississippiappraiser.com`. It preserves the
 original WordPress blog URLs, all Mississippi county and city service-area
 routes, and the archived media library without a WordPress runtime.
 
+The live blog is backed by PostgreSQL, with optimized images and private post
+backups stored in DigitalOcean Spaces. Publishing does not modify this
+repository or trigger a deployment. See `BLOG_PUBLISHER_SETUP.md`.
+
 ## DigitalOcean App Platform
 
 The repository includes `.do/app.yaml`. DigitalOcean uses:

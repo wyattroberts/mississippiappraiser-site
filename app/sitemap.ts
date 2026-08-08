@@ -1,8 +1,12 @@
 import type { MetadataRoute } from "next";
-import { counties, posts, postHref } from "@/lib/content";
+import { counties, postHref } from "@/lib/content";
+import { getPublishedPosts } from "@/lib/blog-db";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://mississippiappraiser.com";
+  const posts = await getPublishedPosts();
   return [
     { url: `${base}/`, changeFrequency: "monthly", priority: 1 },
     { url: `${base}/blog/`, changeFrequency: "monthly", priority: 0.7 },
@@ -16,4 +20,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ]),
   ];
 }
-
