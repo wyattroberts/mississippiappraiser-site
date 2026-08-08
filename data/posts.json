@@ -226,16 +226,21 @@
   },
   {
     "id": 1112,
-    "date": "2021-11-23T08:52:40",
-    "modified": "2021-11-23T08:52:46",
+    "date": "2021-11-23T12:00:00-05:00",
+    "modified": "2026-08-08T15:33:00.572Z",
     "slug": "the-ideal-neighborhood-by-emily-dickinson",
     "title": "The Ideal Neighborhood, by Emily Dickinson*",
-    "excerpt": "<p>A description of the ideal neighborhood, written by GPT-3, in the style of Emily Dickinson: &#8220;The ideal neighborhoodIs a place of light and prideWhere we all get alongAnd we can talk to one anotherWe see the best in othersAnd we see the best in ourselvesAnd we don&#8217;t need to be afraid&#8221;</p>\n",
-    "content": "\n<p>A description of the ideal neighborhood, written by <a href=\"https://openai.com/blog/gpt-3-apps/\">GPT-3</a>, in the style of <a href=\"https://en.wikipedia.org/wiki/Emily_Dickinson\">Emily Dickinson</a>:</p>\n\n\n\n<p><em>&#8220;The ideal neighborhood<br>Is a place of light and pride<br>Where we all get along<br>And we can talk to one another<br>We see the best in others<br>And we see the best in ourselves<br>And we don&#8217;t need to be afraid&#8221;</em><br></p>\n",
+    "excerpt": "A description of the ideal neighborhood, written by GPT-3, in the style of Emily Dickinson: &#8220;The ideal neighborhoodIs a place of light and prideWhere we all get alongAnd we can talk to one anotherWe see the best in othersAnd we see the best in ourselvesAnd we don&#8217;t need to be afraid&#8221;",
+    "content": "<p><i>Most real estate appraisal assignments include some form of neighborhood analysis. The appraiser considers boundaries, land uses, development patterns, access, amenities, and the economic forces influencing property values. But a neighborhood is more than a collection of measurable characteristics. What a neighborhood means—and what would make one ideal—depends greatly on a person’s lived experience: where they have felt safe, where they have felt welcome, and where they have been told they do not belong. This series uses ChatGPT to imagine how people from different eras and backgrounds might describe the ideal neighborhood. These are creative exercises, not authentic writings or quotations from the people named.</i></p>\n\n<p><h3>The Ideal Neighborhood, by ChatGPT in the Style of Emily Dickenson</h3></p>\n\n<p><em>&#8220;The ideal neighborhood<br>Is a place of light and pride<br>Where we all get along<br>And we can talk to one another<br>We see the best in others<br>And we see the best in ourselves<br>And we don&#8217;t need to be afraid&#8221;</em><br></p>",
     "categories": [
       "Uncategorized"
     ],
+    "tags": [],
     "featuredImage": "/wp-content/uploads/2021/11/Emily_Dickinson.jpg",
+    "featuredImageAlt": "Portrait of Emily Dickenson",
+    "seoTitle": "",
+    "seoDescription": "",
+    "status": "published",
     "originalUrl": "https://mississippiappraiser.com/2021/11/the-ideal-neighborhood-by-emily-dickinson/"
   },
   {
