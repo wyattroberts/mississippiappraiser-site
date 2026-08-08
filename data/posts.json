@@ -197,16 +197,26 @@
   },
   {
     "id": 1115,
-    "date": "2021-11-24T09:05:00",
-    "modified": "2021-11-24T09:11:40",
+    "date": "2021-11-24T12:00:00-05:00",
+    "modified": "2026-08-08T15:25:29.814Z",
     "slug": "the-ideal-neighborhood-by-mark-twain",
     "title": "The Ideal Neighborhood, by Mark Twain*",
-    "excerpt": "<p>&#8220;I am writing this for the purpose of providing an insightful vision into the kind of environment I strive to live in. It would be a marvelous place if everyone understood their role to play. The majority of people in this neighborhood are responsible people who are selfless, respectful, and honorable. The citizens are understanding [&hellip;]</p>\n",
-    "content": "\n<p><em>&#8220;I am writing this for the purpose of providing an insightful vision into the kind of environment I strive to live in. It would be a marvelous place if everyone understood their role to play. The majority of people in this neighborhood are responsible people who are selfless, respectful, and honorable. The citizens are understanding enough to know that not everyone is perfect. They do their best to understand each other&#8217;s faults and forgive when necessary.</em></p>\n\n\n\n<p><em>This community&#8217;s people are hardworking individuals who are always willing to lend a hand, even if it means lending it to themselves. I have found that there are other titles that are more valuable than &#8220;King.&#8221; I feel that being deemed worthy of being called &#8220;neighbor&#8221; has much greater meaning. The peace and serenity found in this community is enviable. Happiness is never too far away because there is love between neighbors here.&#8221;</em></p>\n\n\n\n<p>*A description of the ideal neighborhood, written by <a href=\"https://en.wikipedia.org/wiki/GPT-3\">GPT-3</a>, in the style of <a href=\"https://en.wikipedia.org/wiki/Mark_Twain\">Mark Twain</a></p>\n",
+    "excerpt": "&#8220;I am writing this for the purpose of providing an insightful vision into the kind of environment I strive to live in. It would be a marvelous place if everyone understood their role to play. The majority of people in this neighborhood are responsible people who are selfless, respectful, and honorable. The citizens are understanding [&hellip;]",
+    "content": "<p><i>Most real estate appraisal assignments include some form of neighborhood analysis. The appraiser considers boundaries, land uses, development patterns, access, amenities, and the economic forces influencing property values. But a neighborhood is more than a collection of measurable characteristics. What a neighborhood means—and what would make one ideal—depends greatly on a person’s lived experience: where they have felt safe, where they have felt welcome, and where they have been told they do not belong. This series uses ChatGPT to imagine how people from different eras and backgrounds might describe the ideal neighborhood. These are creative exercises, not authentic writings or quotations from the people named.</i></p>\n\n<p><h3>The Ideal Neighborhood, by ChatGPT in the Style of Mark Twain</h3></p>\n\n<p><em>&#8220;I am writing this for the purpose of providing an insightful vision into the kind of environment I strive to live in. It would be a marvelous place if everyone understood their role to play. The majority of people in this neighborhood are responsible people who are selfless, respectful, and honorable. The citizens are understanding enough to know that not everyone is perfect. They do their best to understand each other&#8217;s faults and forgive when necessary.</em></p>\n\n\n\n<p><em>This community&#8217;s people are hardworking individuals who are always willing to lend a hand, even if it means lending it to themselves. I have found that there are other titles that are more valuable than &#8220;King.&#8221; I feel that being deemed worthy of being called &#8220;neighbor&#8221; has much greater meaning. The peace and serenity found in this community is enviable. Happiness is never too far away because there is love between neighbors here.&#8221;</em></p>\n\n\n\n<p>*A description of the ideal neighborhood, written by <a href=\"https://en.wikipedia.org/wiki/GPT-3\">GPT-3</a>, in the style of <a href=\"https://en.wikipedia.org/wiki/Mark_Twain\">Mark Twain</a></p>",
     "categories": [
-      "Uncategorized"
+      "Appraisal practic"
+    ],
+    "tags": [
+      "neighborhood",
+      "market analysis",
+      "Mark Twain",
+      "writing"
     ],
     "featuredImage": "/wp-content/uploads/2021/11/Mark-Twain.jpeg",
+    "featuredImageAlt": "Portrait of Mark Twain",
+    "seoTitle": "",
+    "seoDescription": "",
+    "status": "draft",
     "originalUrl": "https://mississippiappraiser.com/2021/11/the-ideal-neighborhood-by-mark-twain/"
   },
   {
