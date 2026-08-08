@@ -1,18 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Post } from "@/lib/content";
+import { allPosts, type Post } from "@/lib/content";
 import { isAdmin, sameOrigin } from "@/lib/admin-auth";
-import { archivePost, getAllPosts, nextPostId, savePost } from "@/lib/blog-db";
+import { readPostsFile, writePostsFile } from "@/lib/github-content";
 import { cleanList, sanitizePostHtml, slugify } from "@/lib/post-sanitize";
-import { backupBlogPosts, spacesConfigured } from "@/lib/spaces";
 
 function unauthorized() {
   return NextResponse.json({ error: "Sign in required" }, { status: 401 });
 }
 
 function message(error: unknown) {
-  if (typeof error === "object" && error && "code" in error && error.code === "23505") {
-    return "That URL slug is already used by another post.";
-  }
   return error instanceof Error ? error.message : "Unable to update posts";
 }
 
@@ -30,7 +26,7 @@ function postPath(date: string, slug: string) {
 export async function GET(request: NextRequest) {
   if (!await isAdmin(request)) return unauthorized();
   return NextResponse.json({
-    posts: await getAllPosts(),
+    posts: [...allPosts].sort((a, b) => new Date(b.modified || b.date).getTime() - new Date(a.modified || a.date).getTime()),
   });
 }
 
@@ -50,14 +46,15 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const posts = await getAllPosts();
+    const { posts, sha } = await readPostsFile();
     const requestedId = Number(payload.id);
-    const existing = Number.isFinite(requestedId) ? posts.find((post) => post.id === requestedId) : undefined;
-    const duplicate = posts.find((post) => post.slug === slug && post.id !== existing?.id);
+    const existingIndex = Number.isFinite(requestedId) ? posts.findIndex((post) => post.id === requestedId) : -1;
+    const duplicate = posts.find((post, index) => post.slug === slug && index !== existingIndex);
     if (duplicate) return NextResponse.json({ error: "That URL slug is already used by another post." }, { status: 409 });
 
     const now = new Date().toISOString();
-    const id = existing?.id ?? await nextPostId();
+    const existing = existingIndex >= 0 ? posts[existingIndex] : undefined;
+    const id = existing?.id ?? Math.max(Date.now(), ...posts.map((post) => (Number(post.id) || 0) + 1));
     const excerpt = String(payload.excerpt || "").trim().slice(0, 600);
     const featuredImage = String(payload.featuredImage || "").trim() || null;
     const featuredImageAlt = String(payload.featuredImageAlt || "").trim().slice(0, 240);
@@ -86,17 +83,12 @@ export async function POST(request: NextRequest) {
       originalUrl: `https://mississippiappraiser.com${postPath(date, slug)}`,
     };
 
-    const savedPost = await savePost(post);
-    const updatedPosts = await getAllPosts();
-    let backupWarning = "";
-    if (spacesConfigured()) {
-      try {
-        await backupBlogPosts(updatedPosts);
-      } catch {
-        backupWarning = "The post was saved, but its Spaces backup could not be updated.";
-      }
-    }
-    return NextResponse.json({ post: savedPost, posts: updatedPosts, backupWarning });
+    if (existingIndex >= 0) posts[existingIndex] = post;
+    else posts.push(post);
+    posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const action = status === "published" ? "Publish" : "Save draft";
+    const result = await writePostsFile(posts, sha, `${action}: ${title}`);
+    return NextResponse.json({ post, posts, commitUrl: result.commit.html_url, deploymentPending: true });
   } catch (error) {
     return NextResponse.json({ error: message(error) }, { status: 502 });
   }
@@ -109,18 +101,13 @@ export async function DELETE(request: NextRequest) {
   const id = Number(payload.id);
   if (!Number.isFinite(id)) return NextResponse.json({ error: "Invalid post" }, { status: 400 });
   try {
-    const post = await archivePost(id);
-    if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
-    const posts = await getAllPosts();
-    let backupWarning = "";
-    if (spacesConfigured()) {
-      try {
-        await backupBlogPosts(posts);
-      } catch {
-        backupWarning = "The post was archived, but its Spaces backup could not be updated.";
-      }
-    }
-    return NextResponse.json({ post, posts, backupWarning });
+    const { posts, sha } = await readPostsFile();
+    const index = posts.findIndex((post) => post.id === id);
+    if (index < 0) return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    const post = { ...posts[index], status: "archived" as const, modified: new Date().toISOString() };
+    posts[index] = post;
+    const result = await writePostsFile(posts, sha, `Archive: ${post.title}`);
+    return NextResponse.json({ post, posts, commitUrl: result.commit.html_url, deploymentPending: true });
   } catch (error) {
     return NextResponse.json({ error: message(error) }, { status: 502 });
   }

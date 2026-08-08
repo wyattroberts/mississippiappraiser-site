@@ -106,8 +106,8 @@ h3 { font-size: 1.35rem; }
 .article-header h1 { font-size: clamp(2.5rem, 6vw, 5rem); }
 .back-link { display: inline-block; font-size: .82rem; font-weight: 800; margin-bottom: 48px; }
 .back-link:hover { color: var(--red); }
-.article-image { overflow: visible; }
-.article-image img { display: block; height: auto; object-fit: contain; width: 100%; }
+.article-image { max-height: 610px; overflow: hidden; }
+.article-image img { height: 100%; max-height: 610px; object-fit: cover; width: 100%; }
 .article-body { color: #333; font-size: 1.08rem; padding-block: 58px 90px; }
 .article-body p { margin-bottom: 1.4em; }
 .article-body a { color: var(--red-dark); text-decoration: underline; }
@@ -291,7 +291,7 @@ h3 { font-size: 1.35rem; }
 .publisher-settings h2 { font-size: 1.55rem; }
 .publisher-image-field { align-items: center; background: white; border: 1px solid #c9c5bd; display: grid; gap: 24px; grid-template-columns: 1fr 240px; padding: 18px; }
 .publisher-image-field p { color: #777; font-size: .78rem; margin: 6px 0 13px; }
-.publisher-image-field img, .publisher-image-placeholder { align-items: center; aspect-ratio: 16/9; background: #e8e6e1; display: flex; justify-content: center; object-fit: contain; width: 100%; }
+.publisher-image-field img, .publisher-image-placeholder { align-items: center; aspect-ratio: 16/9; background: #e8e6e1; display: flex; justify-content: center; object-fit: cover; width: 100%; }
 .publisher-image-placeholder { color: #888; font-size: .75rem; }
 .publisher-serp { background: white; border: 1px solid #d8d4cc; font-family: Arial, sans-serif; padding: 18px; }
 .publisher-serp span { color: #257342; display: block; font-size: .76rem; }

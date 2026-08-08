@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LeadPanel } from "@/components/lead-panel";
-import { formatPostDate, postDescription, postHref } from "@/lib/content";
-import { findPublishedPost } from "@/lib/blog-db";
+import { findPost, formatPostDate, postDescription, posts, postHref } from "@/lib/content";
 
 type Params = Promise<{ year: string; month: string; slug: string }>;
 
-export const dynamic = "force-dynamic";
+export function generateStaticParams() {
+  return posts.map((post) => {
+    const [, year, month, slug] = postHref(post).split("/");
+    return { year, month, slug };
+  });
+}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { year, month, slug } = await params;
-  const post = await findPublishedPost(year, month, slug);
+  const post = findPost(year, month, slug);
   if (!post) return {};
   const canonical = postHref(post);
   const description = postDescription(post);
@@ -33,7 +37,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function PostPage({ params }: { params: Params }) {
   const { year, month, slug } = await params;
-  const post = await findPublishedPost(year, month, slug);
+  const post = findPost(year, month, slug);
   if (!post) notFound();
   const schemaImage = post.featuredImage
     ? (post.featuredImage.startsWith("https://") ? post.featuredImage : `https://mississippiappraiser.com${post.featuredImage}`)

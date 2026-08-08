@@ -1,39 +1,33 @@
 # Mississippi Appraiser blog publisher setup
 
-The publisher is available at `/admin/blog/`. Posts are stored in PostgreSQL and images are stored in DigitalOcean Spaces. Saving or publishing content does not modify GitHub and does not deploy the application.
+The publisher is available at `/admin/blog/`. It stores posts and uploaded images in this repository; the existing DigitalOcean auto-deploy then publishes the updated site. No database is required.
 
-## DigitalOcean components
+## 1. Create the GitHub publishing token
 
-- An attached PostgreSQL database supplies `DATABASE_URL` at runtime.
-- The `mississippi-appraiser-media` Space stores optimized public images.
-- Every post change also creates a private JSON backup under `backups/posts/` in the Space.
+In GitHub, open **Settings → Developer settings → Personal access tokens → Fine-grained tokens** and create a token with:
 
-## Protected DigitalOcean settings
+- Repository access: **Only select repositories → mississippiappraiser-site**
+- Repository permission: **Contents → Read and write**
+- No other write permissions
 
-Add these to the web service with Runtime scope and encryption enabled:
+Copy the token when GitHub displays it. Do not save it in this repository.
 
-| Name | Purpose |
-|---|---|
-| `BLOG_ADMIN_PASSWORD` | Publisher sign-in password |
-| `BLOG_SESSION_SECRET` | HMAC secret for publisher sessions |
-| `SPACES_ACCESS_KEY_ID` | Limited-access Spaces key ID |
-| `SPACES_SECRET_ACCESS_KEY` | Limited-access Spaces secret key |
+## 2. Add protected DigitalOcean settings
 
-The Spaces key should have Read/Write/Delete access only to `mississippi-appraiser-media`.
+Open the DigitalOcean app, select **Settings → App-Level Environment Variables**, and add:
 
-## Non-secret DigitalOcean settings
+| Name | Value | Protection |
+|---|---|---|
+| `BLOG_ADMIN_PASSWORD` | A long, unique publisher password | Encrypt |
+| `BLOG_SESSION_SECRET` | Output from `openssl rand -hex 32` | Encrypt |
+| `BLOG_GITHUB_TOKEN` | The fine-grained GitHub token | Encrypt |
+| `BLOG_GITHUB_REPOSITORY` | `wyattroberts/mississippiappraiser-site` | Plain text is acceptable |
+| `BLOG_GITHUB_BRANCH` | `main` | Plain text is acceptable |
 
-Add these to the web service with Runtime scope:
+Use **Run Time** scope if DigitalOcean asks for a scope. Save the settings and allow the app to redeploy.
 
-| Name | Value |
-|---|---|
-| `SPACES_BUCKET` | `mississippi-appraiser-media` |
-| `SPACES_REGION` | `nyc3` |
-| `SPACES_ENDPOINT` | `https://nyc3.digitaloceanspaces.com` |
-| `SPACES_PUBLIC_BASE_URL` | `https://mississippi-appraiser-media.nyc3.digitaloceanspaces.com` |
+## 3. Open the publisher
 
-## First deployment
+Visit `https://mississippiappraiser.com/admin/blog/` and sign in with `BLOG_ADMIN_PASSWORD`.
 
-On the first request after deployment, the application creates the `blog_posts` table and imports the legacy posts from `data/posts.json` if the table is empty. Later requests read PostgreSQL directly. The JSON file remains only as a first-deployment seed and recovery source.
-
-Still images are automatically rotated, resized to fit within 2000 by 2000 pixels without enlargement, and converted to WebP. Animated GIFs are retained as GIFs. Public article pages show the complete featured image at its natural aspect ratio; compact blog cards use a cropped thumbnail treatment.
+Publishing or uploading an image creates a revision in GitHub. DigitalOcean then rebuilds the public site automatically. Draft posts remain absent from the public blog, sitemap, and RSS feed.

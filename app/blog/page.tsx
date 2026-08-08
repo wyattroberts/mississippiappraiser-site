@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import { formatPostDate, plainText, postHref } from "@/lib/content";
-import { getPublishedPosts } from "@/lib/blog-db";
+import { posts, formatPostDate, plainText, postHref } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "The Commercial Appraiser’s Blog",
   description: "Articles about appraisal theory, real estate, technology, statistics, GIS, and location intelligence.",
 };
 
-export const dynamic = "force-dynamic";
-
-export default async function BlogPage() {
-  const posts = await getPublishedPosts();
+export default function BlogPage() {
   return (
     <main>
       <header className="page-hero shell">

@@ -15,7 +15,7 @@ export type Post = {
   featuredImageAlt?: string;
   seoTitle?: string;
   seoDescription?: string;
-  status: "draft" | "published" | "archived";
+  status?: "draft" | "published" | "archived";
   originalUrl: string;
 };
 
@@ -29,13 +29,13 @@ type ArchivedPage = {
   title: { rendered: string };
 };
 
-export function cleanLegacyHtml(html: string) {
+function cleanLegacyHtml(html: string) {
   return html
     .replace(/\[\/?et_pb_[^\]]*\]/g, "")
     .replace(/image-(?:1024x912|980x873|480x428)\.png/g, "image.png");
 }
 
-export const legacyAllPosts = (postsJson as Array<Omit<Post, "status"> & { status?: Post["status"] }>)
+export const allPosts = (postsJson as Post[])
   .map((post) => ({
     ...post,
     status: post.status ?? "published",
@@ -43,6 +43,8 @@ export const legacyAllPosts = (postsJson as Array<Omit<Post, "status"> & { statu
     content: cleanLegacyHtml(post.content),
   }))
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export const posts = allPosts.filter((post) => post.status === "published");
 
 const archivedPages = pagesJson as ArchivedPage[];
 const mississippiPage = archivedPages.find((page) => page.slug === "mississippi");
@@ -69,14 +71,9 @@ export function formatPostDate(value: string) {
 }
 
 export function postHref(post: Post) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-  }).formatToParts(new Date(post.date));
-  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-  const year = values.year;
-  const month = values.month;
+  const date = new Date(post.date);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
   return `/${year}/${month}/${post.slug}/`;
 }
 
@@ -94,6 +91,10 @@ export function plainText(html: string) {
 
 export function postDescription(post: Post) {
   return (post.seoDescription || plainText(post.excerpt) || plainText(post.content)).slice(0, 160);
+}
+
+export function findPost(year: string, month: string, slug: string) {
+  return posts.find((post) => postHref(post) === `/${year}/${month}/${slug}/`);
 }
 
 export function findCounty(slug: string) {

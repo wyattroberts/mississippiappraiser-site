@@ -1,7 +1,4 @@
-import { postDescription, postHref } from "@/lib/content";
-import { getPublishedPosts } from "@/lib/blog-db";
-
-export const dynamic = "force-dynamic";
+import { posts, postDescription, postHref } from "@/lib/content";
 
 function xml(value: string) {
   return value.replace(/[<>&'\"]/g, (character) => ({
@@ -13,10 +10,9 @@ function xml(value: string) {
   })[character] || character);
 }
 
-export async function GET() {
+export function GET() {
   const base = "https://mississippiappraiser.com";
-  const posts = await getPublishedPosts(25);
-  const items = posts.map((post) => `
+  const items = posts.slice(0, 25).map((post) => `
     <item>
       <title>${xml(post.title)}</title>
       <link>${base}${postHref(post)}</link>
@@ -33,5 +29,5 @@ export async function GET() {
     <description>Appraisal, real estate, data, and technology from Wyatt Roberts, MAI.</description>
     <language>en-us</language>${items}
   </channel>
-</rss>`, { headers: { "Content-Type": "application/rss+xml; charset=utf-8", "Cache-Control": "public, max-age=300" } });
+</rss>`, { headers: { "Content-Type": "application/rss+xml; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
 }

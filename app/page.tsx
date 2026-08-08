@@ -1,11 +1,7 @@
 import { LeadPanel } from "@/components/lead-panel";
-import { counties, formatPostDate, plainText, postHref } from "@/lib/content";
-import { getPublishedPosts } from "@/lib/blog-db";
+import { posts, counties, formatPostDate, plainText, postHref } from "@/lib/content";
 
-export const dynamic = "force-dynamic";
-
-export default async function Home() {
-  const posts = await getPublishedPosts(3);
+export default function Home() {
   return (
     <main>
       <section className="hero">
@@ -99,7 +95,7 @@ export default async function Home() {
             <a className="text-link light-link" href="/blog/">Read all posts <span>→</span></a>
           </div>
           <div className="post-grid">
-            {posts.map((post) => (
+            {posts.slice(0, 3).map((post) => (
               <article className="post-card" key={post.id}>
                 {post.featuredImage && <img src={post.featuredImage} alt="" />}
                 <div className="post-card-body">
@@ -117,3 +113,4 @@ export default async function Home() {
     </main>
   );
 }
+
