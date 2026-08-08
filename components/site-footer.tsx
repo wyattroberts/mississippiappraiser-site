@@ -13,7 +13,7 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="footer-label">Mailing address</p>
-          <p>P.O. Box 1094<br />Florence, MS 39073</p>
+          <p>Wyatt Roberts, MAI<br />P.O. Box 15113<br />Hattiesburg, MS 39404</p>
         </div>
       </div>
       <div className="footer-bottom">© {new Date().getFullYear()} Mississippi Appraiser · Wyatt Roberts, MAI</div>

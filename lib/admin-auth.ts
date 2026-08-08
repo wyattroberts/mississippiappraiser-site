@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const COOKIE_NAME = "ma_blog_session";
+export const BLOG_ADMIN_COOKIE_NAME = "ma_blog_session";
 const SESSION_SECONDS = 8 * 60 * 60;
 
 function base64Url(bytes: Uint8Array) {
@@ -61,7 +61,7 @@ export function hasAdminConfiguration() {
 }
 
 export async function isAdmin(request: NextRequest) {
-  return verifyAdminSession(request.cookies.get(COOKIE_NAME)?.value);
+  return verifyAdminSession(request.cookies.get(BLOG_ADMIN_COOKIE_NAME)?.value);
 }
 
 export function sameOrigin(request: NextRequest) {
@@ -76,7 +76,7 @@ export function sameOrigin(request: NextRequest) {
 }
 
 export function setSessionCookie(response: NextResponse, token: string) {
-  response.cookies.set(COOKIE_NAME, token, {
+  response.cookies.set(BLOG_ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
@@ -86,7 +86,7 @@ export function setSessionCookie(response: NextResponse, token: string) {
 }
 
 export function clearSessionCookie(response: NextResponse) {
-  response.cookies.set(COOKIE_NAME, "", {
+  response.cookies.set(BLOG_ADMIN_COOKIE_NAME, "", {
     httpOnly: true,
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",

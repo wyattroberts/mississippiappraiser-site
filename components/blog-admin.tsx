@@ -158,7 +158,16 @@ export function BlogAdmin() {
     setBusy("Loading posts…");
     try {
       const payload = await api("/api/admin/posts");
-      setPosts(payload.posts);
+      const loadedPosts = payload.posts as StoredPost[];
+      setPosts(loadedPosts);
+      const requestedId = Number(new URLSearchParams(window.location.search).get("post"));
+      const requestedPost = Number.isFinite(requestedId) ? loadedPosts.find((post) => post.id === requestedId) : undefined;
+      if (requestedPost) {
+        setSelectedId(requestedPost.id);
+        setDraft(toDraft(requestedPost));
+        setDirty(false);
+        setView("edit");
+      }
     } catch (error) {
       setNotice({ kind: "error", text: error instanceof Error ? error.message : "Unable to load posts." });
     } finally {
@@ -207,6 +216,7 @@ export function BlogAdmin() {
     setDirty(false);
     setNotice(null);
     setView("edit");
+    window.history.replaceState(null, "", `/admin/blog/?post=${post.id}`);
   }
 
   function newPost() {
@@ -216,6 +226,7 @@ export function BlogAdmin() {
     setDirty(false);
     setNotice(null);
     setView("edit");
+    window.history.replaceState(null, "", "/admin/blog/");
   }
 
   function syncEditor() {
