@@ -29,7 +29,7 @@ export default function ContactPage() {
             <li>Requested completion date</li>
             <li>Your name and best callback number</li>
           </ol>
-          <p className="mailing">Mississippi Appraiser<br />P.O. Box 1094<br />Florence, MS 39073</p>
+          <p className="mailing">Wyatt Roberts, MAI<br />P.O. Box 15113<br />Hattiesburg, MS 39404</p>
         </aside>
       </section>
     </main>
