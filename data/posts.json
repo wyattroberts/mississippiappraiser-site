@@ -174,19 +174,19 @@
   {
     "id": 1078,
     "date": "2021-07-15T12:00:00-05:00",
-    "modified": "2026-08-08T12:37:11.336Z",
+    "modified": "2026-08-08T12:43:50.776Z",
     "slug": "are-you-self-employed",
     "title": "Are you self-employed?",
     "excerpt": "Are you self-employed? Many of the folks in the Jackson, MS Metropolitan Statistical Area earn at least a portion of their annual household income from self-employment.",
-    "content": "<figure><span>Are you self-employed? I've worked for myself for many years -- well, for Wyattopia, anyway -- as a commercial appraiser, a real estate broker, and as a software engineer. However, I don't really have a good </span>sense<span>&nbsp;of how many other&nbsp;folks are in the same boat or how it correlates to overall income. Judging from the map I've including with this post, many people in the Jackson, MS Metropolitan Statistical Area earn at least a portion of their annual household income from self-employment (1 dot = 1 person).</span><br></figure>",
+    "content": "<figure><span>Are you self-employed? I've worked for myself for many years -- worked for Wyattopia, anyway -- as a commercial appraiser, a real estate broker, and as a software engineer. However, I don't really have a good </span>sense<span>&nbsp;of how many other&nbsp;folks are in the same boat, or how self-employment correlates to overall income. Judging from the map I've including with this post, many people in the Jackson, MS Metropolitan Statistical Area earn at least a portion of their annual household income from self-employment (1 dot = 1 person).</span><br></figure>",
     "categories": [
       "Uncategorized"
     ],
     "tags": [],
     "featuredImage": "/uploads/blog/2026/08/are-you-self-employed-1786191725176.jpg",
-    "featuredImageAlt": "",
-    "seoTitle": "",
-    "seoDescription": "",
+    "featuredImageAlt": "Map illustrating how many people in the Jackson, MS metro area who earn a portion of their annual household income from self-employment (1 dot = 1 person).",
+    "seoTitle": "Self-Employment Income in Jackson, MS: Census Data & Map",
+    "seoDescription": "Explore self-employment patterns across the Jackson, MS metropolitan area using ACS census data. Interactive map showing households with self-employment income by tract.",
     "status": "draft",
     "originalUrl": "https://mississippiappraiser.com/2021/07/are-you-self-employed/"
   },
