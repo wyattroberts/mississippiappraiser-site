@@ -57,7 +57,7 @@ export async function verifyAdminSession(token?: string) {
 }
 
 export function hasAdminConfiguration() {
-  return Boolean(process.env.BLOG_ADMIN_PASSWORD && process.env.BLOG_SESSION_SECRET && process.env.BLOG_GITHUB_TOKEN);
+  return Boolean(process.env.BLOG_ADMIN_PASSWORD && process.env.BLOG_SESSION_SECRET && process.env.DATABASE_URL);
 }
 
 export async function isAdmin(request: NextRequest) {
