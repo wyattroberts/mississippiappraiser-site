@@ -150,16 +150,21 @@
   },
   {
     "id": 1127,
-    "date": "2021-11-29T09:05:00",
-    "modified": "2021-11-24T17:07:10",
+    "date": "2021-11-29T12:00:00-05:00",
+    "modified": "2026-08-08T14:00:13.594Z",
     "slug": "the-ideal-neighborhood-by-charles-dickens",
     "title": "The Ideal Neighborhood, by Charles Dickens*",
-    "excerpt": "<p>A description of the ideal neighborhood, written by GPT-3, in the style of Charles Dickens &#8220;I began on my way towards the little town of Chatham, whither the carrier was making his way, and which I had not more than twice visited; passing first through some half-dozen scattered houses; then, through the village of Ebbington; [&hellip;]</p>\n",
-    "content": "\n<p>A description of the ideal neighborhood, written by <a href=\"https://en.wikipedia.org/wiki/GPT-3\">GPT-3</a>, in the style of <a href=\"https://en.wikipedia.org/wiki/Charles_Dickens\">Charles Dickens</a></p>\n\n\n\n<p><em>&#8220;I began on my way towards the little town of Chatham, whither the carrier was making his way, and which I had not more than twice visited; passing first through some half-dozen scattered houses; then, through the village of Ebbington; then, over a bare green common of pasture-land, with a central pond where horses were drinking; then, through an avenue of scattered elms, so far as to be within sight of the church at Chatham.</em></p>\n\n\n\n<p><em>The old church tower of Chatham, rising above all else, was finely visible from this retired spot. As I watched it gradually sinking in the distance, I could not but remember how often I had seen its rusty sides peeping above the white chalk rocks on Dartmoor Hills&#8211;a chalk that is nowhere richer or more beautiful than on those bare heights. With that remembrance came two other thoughts respecting myself. One was that an unbroken spell seemed to be upon me now&#8211;I who had never dreamed of being weary of anything since boyhood. The other was that this solitude was better suited to my restless mind than any other place would have been.&#8221;</em></p>\n",
+    "excerpt": "A description of the ideal neighborhood, written by GPT-3, in the style of Charles Dickens &#8220;I began on my way towards the little town of Chatham, whither the carrier was making his way, and which I had not more than twice visited; passing first through some half-dozen scattered houses; then, through the village of Ebbington; [&hellip;]",
+    "content": "<p><i>Most real estate appraisal assignments include some form of neighborhood analysis. The appraiser considers boundaries, land uses, development patterns, access, amenities, and the economic forces influencing property values. But a neighborhood is more than a collection of measurable characteristics. What a neighborhood means—and what would make one ideal—depends greatly on a person’s lived experience: where they have felt safe, where they have felt welcome, and where they have been told they do not belong. This series uses ChatGPT to imagine how people from different eras and backgrounds might describe the ideal neighborhood. These are creative exercises, not authentic writings or quotations from the people named.</i></p>\n\n<p><h3>The Ideal Neighborhood, by ChatGPT in the Style of Charles Dickens</h3></p>\n\n<p><em>&#8220;I began on my way towards the little town of Chatham, whither the carrier was making his way, and which I had not more than twice visited; passing first through some half-dozen scattered houses; then, through the village of Ebbington; then, over a bare green common of pasture-land, with a central pond where horses were drinking; then, through an avenue of scattered elms, so far as to be within sight of the church at Chatham.</em></p>\n\n\n\n<p><em>The old church tower of Chatham, rising above all else, was finely visible from this retired spot. As I watched it gradually sinking in the distance, I could not but remember how often I had seen its rusty sides peeping above the white chalk rocks on Dartmoor Hills&#8211;a chalk that is nowhere richer or more beautiful than on those bare heights. With that remembrance came two other thoughts respecting myself. One was that an unbroken spell seemed to be upon me now&#8211;I who had never dreamed of being weary of anything since boyhood. The other was that this solitude was better suited to my restless mind than any other place would have been.&#8221;</em></p>",
     "categories": [
-      "Uncategorized"
+      "Appraisal practic"
     ],
+    "tags": [],
     "featuredImage": "/wp-content/uploads/2021/11/Charles-Dickens.jpg",
+    "featuredImageAlt": "Portrait of Charles Dickens",
+    "seoTitle": "The Ideal Neighborhood, by Charles Dickens*",
+    "seoDescription": "An AI-written reflection on what Charles Dickens might have called the ideal neighborhood—a place shaped by landscape, memory, solitude, and belonging.",
+    "status": "published",
     "originalUrl": "https://mississippiappraiser.com/2021/11/the-ideal-neighborhood-by-charles-dickens/"
   },
   {
