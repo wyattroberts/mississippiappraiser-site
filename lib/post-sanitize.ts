@@ -9,7 +9,6 @@ export function slugify(value: string) {
     .slice(0, 100);
 }
 
-
 export function sanitizePostHtml(value: string) {
   return value
     .replace(/<(script|style|iframe|object|embed|form|input|button|svg|math|meta|link|base)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, "")
