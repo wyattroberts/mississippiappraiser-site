@@ -9,12 +9,20 @@ export function slugify(value: string) {
     .slice(0, 100);
 }
 
+
 export function sanitizePostHtml(value: string) {
   return value
     .replace(/<(script|style|iframe|object|embed|form|input|button|svg|math|meta|link|base)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, "")
     .replace(/<(script|style|iframe|object|embed|form|input|button|svg|math|meta|link|base)\b[^>]*\/?>/gi, "")
     .replace(/\s(?:on\w+|style|id|class)\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
     .replace(/(?:javascript|data\s*:\s*text\/html)\s*:/gi, "")
+    .replace(/<\/?(?:span|font)\b[^>]*>/gi, "")
+    .replace(/<b(\s[^>]*)?>/gi, "<strong>")
+    .replace(/<\/b\s*>/gi, "</strong>")
+    .replace(/<i(\s[^>]*)?>/gi, "<em>")
+    .replace(/<\/i\s*>/gi, "</em>")
+    .replace(/<p\b[^>]*>\s*(?:&nbsp;|&#160;|<br\s*\/?>|\s)*<\/p\s*>/gi, "")
+    .replace(/<(ul|ol)\b[^>]*>\s*<\/\1\s*>/gi, "")
     .trim();
 }
 
