@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ClipboardEvent, FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type Status = "draft" | "published" | "archived";
 
@@ -90,6 +90,45 @@ function toDraft(post: StoredPost): Draft {
 
 function splitList(value: string) {
   return value.split(",").map((item) => item.trim()).filter(Boolean);
+}
+
+function normalizeEditorHtml(value: string) {
+  if (typeof document === "undefined") return value.trim();
+  const template = document.createElement("template");
+  template.innerHTML = value;
+
+  template.content.querySelectorAll("script, style, iframe, object, embed, form, input, button, svg, math, meta, link, base").forEach((node) => node.remove());
+  template.content.querySelectorAll<HTMLElement>("*").forEach((node) => {
+    [...node.attributes].forEach((attribute) => {
+      if (/^on/i.test(attribute.name) || ["style", "id", "class"].includes(attribute.name.toLowerCase())) node.removeAttribute(attribute.name);
+    });
+  });
+  template.content.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((node) => {
+    if (/^\s*(?:javascript|data\s*:\s*text\/html)\s*:/i.test(node.getAttribute("href") || "")) node.removeAttribute("href");
+  });
+  template.content.querySelectorAll("span, font").forEach((node) => node.replaceWith(...node.childNodes));
+  template.content.querySelectorAll("b").forEach((node) => {
+    const replacement = document.createElement("strong");
+    replacement.append(...node.childNodes);
+    node.replaceWith(replacement);
+  });
+  template.content.querySelectorAll("i").forEach((node) => {
+    const replacement = document.createElement("em");
+    replacement.append(...node.childNodes);
+    node.replaceWith(replacement);
+  });
+  template.content.querySelectorAll("p").forEach((node) => {
+    if (!node.textContent?.replace(/\u00a0/g, "").trim() && !node.querySelector("img")) node.remove();
+  });
+  template.content.querySelectorAll("ul, ol").forEach((node) => {
+    if (!node.querySelector("li")) node.remove();
+  });
+  return template.innerHTML.trim();
+}
+
+function selectionElement() {
+  const node = window.getSelection()?.anchorNode;
+  return node instanceof HTMLElement ? node : node?.parentElement || null;
 }
 
 export function BlogAdmin() {
@@ -244,6 +283,44 @@ export function BlogAdmin() {
     if (href) format("createLink", href);
   }
 
+  function toggleQuote() {
+    const inQuote = selectionElement()?.closest("blockquote");
+    format("formatBlock", inQuote ? "p" : "blockquote");
+  }
+
+  function handleEditorKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Enter" || event.shiftKey) return;
+    const selection = window.getSelection();
+    const quote = selectionElement()?.closest("blockquote");
+    if (!selection?.rangeCount || !selection.isCollapsed || !quote) return;
+
+    const cursor = selection.getRangeAt(0);
+    const remaining = cursor.cloneRange();
+    remaining.selectNodeContents(quote);
+    remaining.setStart(cursor.endContainer, cursor.endOffset);
+    if (remaining.toString().trim()) return;
+
+    event.preventDefault();
+    const paragraph = document.createElement("p");
+    paragraph.append(document.createElement("br"));
+    quote.after(paragraph);
+    const next = document.createRange();
+    next.setStart(paragraph, 0);
+    next.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(next);
+    syncEditor();
+  }
+
+  function handleEditorPaste(event: ClipboardEvent<HTMLDivElement>) {
+    const html = event.clipboardData.getData("text/html");
+    const text = event.clipboardData.getData("text/plain");
+    if (!html) return;
+    event.preventDefault();
+    document.execCommand("insertHTML", false, normalizeEditorHtml(html) || text);
+    syncEditor();
+  }
+
   async function upload(file: File, purpose: "featured" | "inline") {
     setBusy("Uploading image…");
     setNotice(null);
@@ -271,7 +348,8 @@ export function BlogAdmin() {
   }
 
   async function save(status: "draft" | "published") {
-    const content = view === "edit" && editorRef.current ? editorRef.current.innerHTML : draft.content;
+    const rawContent = view === "edit" && editorRef.current ? editorRef.current.innerHTML : draft.content;
+    const content = normalizeEditorHtml(rawContent);
     setBusy(status === "published" ? "Publishing…" : "Saving draft…");
     setNotice(null);
     try {
@@ -422,12 +500,12 @@ export function BlogAdmin() {
                 <button type="button" title="Italic" onMouseDown={(event) => event.preventDefault()} onClick={() => format("italic")}><i>I</i></button>
                 <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => format("insertUnorderedList")}>• List</button>
                 <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => format("insertOrderedList")}>1. List</button>
-                <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => format("formatBlock", "blockquote")}>Quote</button>
+                <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={toggleQuote}>Quote</button>
                 <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={addLink}>Link</button>
                 <button type="button" onClick={() => inlineInputRef.current?.click()}>Image</button>
                 <input ref={inlineInputRef} hidden type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, "inline"); event.target.value = ""; }} />
               </div>
-              <div ref={editorRef} className="publisher-content-editor article-body" contentEditable suppressContentEditableWarning onInput={syncEditor} data-placeholder="Start writing your article…" />
+              <div ref={editorRef} className="publisher-content-editor article-body" contentEditable suppressContentEditableWarning onInput={syncEditor} onKeyDown={handleEditorKeyDown} onPaste={handleEditorPaste} data-placeholder="Start writing your article…" />
             </div>
           )}
 
