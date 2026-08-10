@@ -10,6 +10,7 @@
   --red-dark: #b5080d;
 }
 
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; line-height: 1.6; }
@@ -114,7 +115,15 @@ h3 { font-size: 1.35rem; }
 .article-body p { margin-bottom: 1.4em; }
 .article-body a { color: var(--red-dark); text-decoration: underline; }
 .article-body figure { margin: 2rem 0; }
-.article-body ul { padding-left: 1.3rem; }
+.article-body ul, .article-body ol { margin: 1.4em 0; padding-left: 1.75rem; }
+.article-body ul { list-style: disc outside; }
+.article-body ol { list-style: decimal outside; }
+.article-body li { display: list-item; margin: .65em 0; padding-left: .2rem; }
+.article-body li::marker { color: currentColor; }
+.article-body h2, .article-body h3 { margin: 1.6em 0 .6em; }
+.article-body blockquote { border-left: 4px solid var(--red); font-size: 1.15em; margin: 1.8em 0; padding: .2em 0 .2em 1.25rem; }
+.article-body blockquote > :last-child { margin-bottom: 0; }
+.article-body blockquote + p { margin-top: 1.4em; }
 .article-body iframe, .article-body .fb-post { max-width: 100%; }
 
 .county-directory { border-left: 1px solid var(--line); border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); }
