@@ -126,7 +126,6 @@ function normalizeEditorHtml(value: string) {
   return template.innerHTML.trim();
 }
 
-
 function selectionElement() {
   const node = window.getSelection()?.anchorNode;
   return node instanceof HTMLElement ? node : node?.parentElement || null;
